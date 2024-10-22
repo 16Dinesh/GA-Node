@@ -1,0 +1,99 @@
+/* admin-styles.css */
+
+/* Basic layout styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  /* Admin layout styling */
+  .admin-layout {
+    display: flex;
+  }
+  
+  /* Sidebar styling */
+  .sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    padding-top: 20px;
+  }
+  .sidebar .nav-link {
+    color: #adb5bd;
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+  }
+  .sidebar .nav-link:hover {
+    background-color: #495057;
+    color: #fff;
+  }
+  .sidebar .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  /* Admin layout header */
+  .admin-layout-header {
+    flex-grow: 1;
+    margin-left: 250px; /* Adjust based on sidebar width */
+    background-color: #fff;
+    padding: 15px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  /* Navbar styling */
+  .navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .navbar .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .navbar .nav-item .nav-link {
+    color: #333;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+  .navbar .nav-item .nav-link:hover {
+    color: #007bff;
+  }
+  
+  /* Main content styling */
+  .admin-main-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    .admin-layout-header {
+      margin-left: 0;
+    }
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
