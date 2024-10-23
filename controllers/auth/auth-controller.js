@@ -1,27 +1,36 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
-
+const AdminUser = require("../../models/AdminUser");
+const validKey = process.env.REGISTER_WEB_KEY;
 
 //register
 const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
+  const { userName, email, password, Register_Key } = req.body;
 
+  console.log(`Admin Try with --> ${Register_Key}`)
   try {
-    const checkUser = await User.findOne({ email });
+    if (validKey !== Register_Key) {
+      return res.json({
+        success: false,
+        message: "Admin Key is Invalid Contact With Administration",
+      });
+    }
+
+    const checkUser = await AdminUser.findOne({ email });
     if (checkUser)
       return res.json({
         success: false,
         message: "User Already exists with the same email! Please try again",
       });
-    
-    const salt = await bcrypt.genSalt(12)
+
+    const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(password, salt);
-    const newUser = new User({
+    const newUser = new AdminUser({
       userName,
       email,
       password: hashPassword,
+      role: "admin",
     });
 
     await newUser.save();
@@ -43,7 +52,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const checkUser = await User.findOne({ email });
+    const checkUser = await AdminUser.findOne({ email });
     if (!checkUser)
       return res.json({
         success: false,
