@@ -17,7 +17,8 @@ const superUserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-});
+ 
+},{ timestamps: true });
 
 superUserSchema.plugin(passportLocalMongoose);
 

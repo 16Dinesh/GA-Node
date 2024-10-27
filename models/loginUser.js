@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
 
-const adminUserSchema = new mongoose.Schema({
+const loginUserSchema = new mongoose.Schema({
+  firebaseUID: { 
+    type: String, 
+    required: [true, "Firebase UID is required"], 
+    unique: true 
+  },
   userName: {
     type: String,
     required: [true, "Username is required"],
-    unique: true,
     trim: true
   },
   email: {
@@ -20,10 +24,16 @@ const adminUserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin"],
     default: "user",
+  },
+  photoURL: { 
+    type: String,
+  },
+  emailVerified: { // Flag indicating if Firebase email is verified
+    type: Boolean,
+    default: false,
   },
 }, { timestamps: true });
 
-const AdminUser = mongoose.model("AdminUser", adminUserSchema);
-module.exports = AdminUser;
+const LoginUser = mongoose.model("loginUser", loginUserSchema);
+module.exports = LoginUser;
