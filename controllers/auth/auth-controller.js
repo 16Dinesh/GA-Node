@@ -1,14 +1,24 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const AdminUser = require("../../models/AdminUser");
+const AdminUser = require("../../models/Web/auth/AdminUser");
+const LoginUser = require("../../models/Web/auth/loginUser")
+const { OAuth2Client } = require("google-auth-library");
 const validKey = process.env.REGISTER_WEB_KEY;
+
+//GOOGLE OATH
+
+const CLIENT_SECRET_KEY = process.env.CLIENT_SECRET_KEY;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+
+const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
 
 //register
 const registerUser = async (req, res) => {
   const { userName, email, password, Register_Key } = req.body;
 
-  console.log(`Admin Try with --> ${Register_Key}`)
+  console.log(`Admin Try with --> ${Register_Key}`);
   try {
     if (validKey !== Register_Key) {
       return res.json({
@@ -99,8 +109,63 @@ const loginUser = async (req, res) => {
   }
 };
 
-//logout
+const googleLogin = async (req, res) => {
+  try {
+    const token = req.body.token;
 
+    // token id
+    // console.log("Received token:", token);
+
+    // Verify the Google ID token
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const googleData = ticket.getPayload();
+
+    //Decoded Google data
+    // console.log("Decoded Google data:", googleData);
+    let user = await LoginUser.findOne({ email: googleData.email });
+
+    if (!user) {
+      user = new LoginUser({
+        userName: googleData.name,
+        email: googleData.email,
+        googleVerified: true,
+        photoURL: googleData.picture,
+        role:"user"
+      });
+      await user.save();
+    }
+
+    const tokenJWT = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        userName: user.userName,
+      },
+      "CLIENT_SECRET_KEY",
+      { expiresIn: "60m" }
+    );
+
+    res.cookie("token", tokenJWT, { httpOnly: true, secure: false }).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        email: user.email,
+        role: user.role,
+        id: user._id,
+        userName: user.userName,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ success: false, message: "Google login failed" });
+  }
+};
+
+//logout
 const logoutUser = (req, res) => {
   res.clearCookie("token").json({
     success: true,
@@ -129,4 +194,10 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, authMiddleware };
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  googleLogin,
+  authMiddleware,
+};

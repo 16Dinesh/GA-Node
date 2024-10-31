@@ -14,7 +14,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 // AdminRoutes
-const adminRouter = require("./routes/page/admin/index")
+const adminRouter = require("./routes/page/admin/index");
 const mainPageRoutes = require("./routes/page/items/Index");
 
 // Api-Routes

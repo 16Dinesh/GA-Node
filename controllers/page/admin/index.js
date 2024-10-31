@@ -1,6 +1,5 @@
 const User = require("../../../models/page/SuperUser");
 const validKey = process.env.ADMIN_KEY;
-const validLoginKey = process.env.LOGIN_KEY;
 
 module.exports.renderAdminLoginForm = (req, res) => {
   res.render("admin/login");
@@ -28,7 +27,15 @@ module.exports.adminSignup = async (req, res) => {
       return res.redirect("/register");
     }
 
-    const newAdmin = new User({ username, email, isAdmin: true });
+    const existingUser = await User.findOne({
+      $or: [{ username }, { email }],
+    });
+    if (existingUser) {
+      console.log("User with this username or email already exists.");
+      return res.redirect("/register");
+    }
+
+    const newAdmin = new User({ username, email, iSAdmin: true });
     const registeredAdmin = await User.register(newAdmin, password);
 
     req.login(registeredAdmin, (err) => {
