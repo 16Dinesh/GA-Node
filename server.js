@@ -1,8 +1,6 @@
 require("dotenv").config({ path: "./.env" });
-
 const express = require("express");
 const app = express();
-
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -13,14 +11,20 @@ const path = require("path");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-// AdminRoutes
+
+// Server-Routes
 const adminRouter = require("./routes/page/admin/index");
 const mainPageRoutes = require("./routes/page/items/Index");
-
-// Api-Routes
-const authRouter = require("./routes/auth/auth-routes");
-const adminProductsRouter = require("./routes/admin/products-routes");
 const SuperUser = require("./models/page/SuperUser");
+
+// Admin-API-Routes
+const adminAuthRouter = require("./routes/auth/adminAuth-routes");
+// const adminProductsRouter = require("./routes/admin/products-routes");
+
+
+//User-API-Route
+const userAuthRouter = require("./routes/auth/userAuth-routes")
+
 
 // View
 app.set("view engine", "ejs");
@@ -94,9 +98,12 @@ passport.deserializeUser(SuperUser.deserializeUser());
 app.use("/", adminRouter);
 app.use("/", mainPageRoutes);
 
-//Api-Services
-app.use("/api/auth", authRouter);
-app.use("/api/admin/products", adminProductsRouter);
+//API-Admin Services
+app.use("/api/admin ", adminAuthRouter);
+// app.use("/api/admin/products", adminProductsRouter);
+
+//API-user Services
+app.use("/api/user", userAuthRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));

@@ -10,7 +10,7 @@ const loginUserSchema = new mongoose.Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    number: {
+    mobile_number: {
       type: String,
     },
     password: {
