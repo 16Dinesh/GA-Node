@@ -94,7 +94,7 @@ passport.use(new LocalStrategy(SuperUser.authenticate()));
 passport.serializeUser(SuperUser.serializeUser());
 passport.deserializeUser(SuperUser.deserializeUser());
 
-//Admin-Services
+//Server-Routes
 app.use("/", adminRouter);
 app.use("/", mainPageRoutes);
 
@@ -106,4 +106,4 @@ app.use("/api/admin ", adminAuthRouter);
 app.use("/api/user", userAuthRouter);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`)); 

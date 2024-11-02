@@ -4,15 +4,15 @@ const jwt = require("jsonwebtoken");
 
 // GOOGLE OAUTH
 const GOOGLE_SECRET_KEY = process.env.CLIENT_SECRET_KEY;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const googleLogin = async (req, res) => {
   try {
-    const token = req.body.token;
+    const tokenGoogle = req.body.token;
     const ticket = await oAuth2Client.verifyIdToken({
-      idToken: token,
+      idToken: tokenGoogle,
       audience: GOOGLE_CLIENT_ID,
     });
     const googleData = ticket.getPayload();
@@ -29,6 +29,10 @@ const googleLogin = async (req, res) => {
         role: "user",
       });
       await user.save();
+      res.status(200).json({
+        success: true,
+        message: "Google Login successful",
+      });
     } else {
       // Update user data if necessary
       user = await LoginUser.findOneAndUpdate(
@@ -42,7 +46,7 @@ const googleLogin = async (req, res) => {
       );
     }
 
-    const tokenJWT = jwt.sign(
+    const token = jwt.sign(
       {
         id: user._id,
         role: user.role,
@@ -53,42 +57,23 @@ const googleLogin = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    res
-      .cookie("token", tokenJWT, { httpOnly: true, secure: false })
-      .json({
-        success: true,
-        message: "Logged in successfully",
-        user: {
-          email: user.email,
-          role: user.role,
-          id: user._id,
-          userName: user.userName,
-        },
-      });
+    res.cookie("token", token, { httpOnly: true, secure: false }).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        email: user.email,
+        role: user.role,
+        id: user._id,
+        userName: user.userName,
+      },
+    });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ success: false, message: "Google login failed" });
+    res.status(500).json({
+      success: false,
+       message: "Google login failed",
+    });
   }
 };
 
-const authMiddleware = async (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token)
-      return res.status(401).json({
-        success: false,
-        message: "unAuthorized user!",
-      });
-  
-    try {
-      const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
-      req.user = decoded;
-      next();
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        message: "Unauthorized user!",
-      });
-    }
-  };
-
-module.exports = { googleLogin, authMiddleware };
+module.exports = { googleLogin };

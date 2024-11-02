@@ -4,9 +4,6 @@ const jwt = require("jsonwebtoken");
 const AdminUser = require("../../models/Web/auth/AdminUser");
 const validKey = process.env.REGISTER_WEB_KEY;
 
-
-
-
 //register
 const registerUser = async (req, res) => {
   const { userName, email, password, Register_Key } = req.body;
@@ -102,8 +99,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-
-
 //logout
 const logoutUser = (req, res) => {
   res.clearCookie("token").json({
@@ -118,7 +113,7 @@ const authMiddleware = async (req, res, next) => {
   if (!token)
     return res.status(401).json({
       success: false,
-      message: "unAuthorized user!",
+      message: "Unauthorized user!",
     });
 
   try {
@@ -132,6 +127,7 @@ const authMiddleware = async (req, res, next) => {
     });
   }
 };
+
 
 module.exports = {
   registerUser,
