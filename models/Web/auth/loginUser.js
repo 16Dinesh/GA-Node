@@ -18,7 +18,7 @@ const loginUserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-    },
+    },  
     photoURL: {
       type: String,
     },

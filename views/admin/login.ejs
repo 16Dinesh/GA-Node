@@ -1,32 +1,54 @@
 <% layout("/layout/layoutlogin.ejs") -%>
-<link rel="stylesheet" href="Login.css">
-<div class="auth-container">
-  <div class="auth-card">
+<div class="common-body">
+  <div class="auth-container">
     <div class="auth-header">
       <h3>Login</h3>
     </div>
     <div class="auth-body">
-      <form action="/" method="POST" class="auth-form" novalidate> 
+      <form action="/" method="POST" class="auth-form" novalidate>
         <div class="form-group">
           <label for="username" class="input-label">User ID</label>
-          <input type="text" class="input-field" id="username" name="username" placeholder="Enter your User ID" required>
+          <input
+            type="text"
+            class="input-field"
+            id="username"
+            name="username"
+            placeholder="Enter your User ID"
+            required
+          />
         </div>
-        
+
         <div class="form-group">
           <label for="password" class="input-label">Password</label>
-          <input type="password" class="input-field" id="password" name="password" placeholder="Enter your password" required>
+          <input
+            type="password"
+            class="input-field"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
         </div>
-        
+
         <div class="form-group">
           <label for="adminKey" class="input-label">*Admin Key</label>
-          <input type="password" class="input-field" id="adminKey" name="adminKey" placeholder="Enter Admin Key" required>
+          <input
+            type="password"
+            class="input-field"
+            id="adminKey"
+            name="adminKey"
+            placeholder="Enter Admin Key"
+            required
+          />
         </div>
-        
-        <button type="submit" class="submit-btn">Login</button>
-        
-        <div class="register-text">
-          Don’t have an account? <a href="/register" class="link">Register now</a>
+
+        <div class="form-btn-place">
+          <button type="submit" class="submit-btn">Login</button>
         </div>
+
+        <!-- <div class="register-text">
+            Don’t have an account? <a href="/register" class="link">Register now</a>
+          </div> -->
       </form>
     </div>
   </div>

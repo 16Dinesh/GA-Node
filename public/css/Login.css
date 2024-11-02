@@ -1,32 +1,42 @@
-body {
-  font-family: 'Roboto', sans-serif;
+.common-body {
+  font-family: "Roboto", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
- .auth-container {
+.auth-container {
   background: rgb(255, 255, 255);
   border-radius: 15px;
+  padding: 1rem;
+  width: 28rem;
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
-  padding: 55px;
-  width: 350px;
   /* max-width: 700px; */
 }
 
-.auth-header h3 {
+
+.auth-header{
   text-align: center;
-  color: #4D7041;
-  margin-top: 10px;
+  color: #4d7041;
+  margin-top: 2rem;
   margin-bottom: 30px;
-  font-size: 32px;
+  font-size: 28px;
 }
 
+.auth-body {
+  display: flex;
+  justify-content: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
 .input-field {
-  width: 100%;
   padding: 15px;
-  margin: 10px 0 10px -10px;
+  width: 20rem;
+  margin: 10px 0 10px 0 ;
   border: 1px solid #ddd;
   border-radius: 8px;
   transition: border-color 0.3s;
@@ -34,35 +44,45 @@ body {
 }
 
 .input-field:focus {
-  border-color: #a29bfe;
+  border-color: #5b864d;
   outline: none;
 }
 
 .input-label {
-  display: block; 
-  margin-left: -10px; 
+  display: flex;
+  flex-direction: column;
+  margin-left: 0;
   color: #333;
   font-size: 1rem;
 }
 
+.form-btn-place {
+  display: flex;
+  justify-content: start;
+  cursor: pointer;
+  margin-left: 0px;
+  /* margin: 1.5rem 0rem 1.5rem 0; */
+  margin-bottom: 2rem;
+}
+
 .submit-btn {
-  width: 50%;
+  width: 10.5rem;
   padding: 0.6rem;
   font-size: 1rem;
-  background-color: #5B864D;
+  background-color: #5b864d;
   color: white;
-  margin-left: -10px;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   text-align: center;
-  margin-bottom: 0.5rem;
-  
+  margin-top: 1rem;
+  /* margin-bottom: 0.5rem; */
 }
 
 .submit-btn:hover {
-  background-color: #4D7041;
+  background-color: #4d7041;
 }
+
+/* register */
 
 .register-text {
   margin-top: 1rem;
