@@ -1,8 +1,15 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
+const LoginUser = require("../../models/Web/auth/loginUser");
 const AdminUser = require("../../models/Web/auth/AdminUser");
 const validKey = process.env.REGISTER_WEB_KEY;
+
+// Google OAuth client setup
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_SECRET_KEY = process.env.CLIENT_SECRET_KEY;
+const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 //register
 const registerUser = async (req, res) => {
@@ -99,6 +106,93 @@ const loginUser = async (req, res) => {
   }
 };
 
+//google
+const googleLogin = async (req, res) => {
+  try {
+    const tokenGoogle = req.body.token;
+
+    // Verify Google token
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: tokenGoogle,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const googleData = ticket.getPayload();
+
+    let user = await LoginUser.findOne({ email: googleData.email });
+
+    // Create a new user if one does not already exist
+    if (!user) {
+      user = new LoginUser({
+        userName: googleData.name,
+        email: googleData.email,
+        googleVerified: true,
+        photoURL: googleData.picture,
+        role: "user",
+      });
+      await user.save();  
+    } else {
+      // Update user data if necessary
+      user = await LoginUser.findOneAndUpdate(
+        { email: googleData.email },
+        {
+          userName: googleData.name,
+          photoURL: googleData.picture,
+          googleVerified: true,
+        },
+        { new: true }
+      );
+    }
+
+    // Generate JWT
+    const accessToken  = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        userName: user.userName,
+        googleVerified: user.googleVerified,
+      },
+      "GOOGLE_SECRET_KEY",
+      { expiresIn: "60m" }
+    );
+
+    // const refreshToken = jwt.sign(
+    //   { id: user._id }, // You can include more info if necessary
+    //   process.env.REFRESH_TOKEN_SECRET, // Use environment variable
+    //   { expiresIn: "3d" } // Set refresh token expiration
+    // );
+
+    // Set token in an HTTP-only cookie
+
+    // res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false });
+    res.cookie("token", accessToken, { httpOnly: true, secure: false })
+
+    res.json({
+      success: true,
+      message: "Google Logged in successfully",
+      user: {
+          email: user.email,
+          role: user.role,
+          id: user._id,
+          userName: user.userName,
+          googleVerified: user.googleVerified,
+        },
+      });
+  } catch (e) {
+    console.error("Google login failed:", e);
+    res.status(500).json({
+      success: false,
+      message: "Google login failed",
+    });
+  }
+};
+
+//register-user
+
+//login-user
+
+
+
 //logout
 const logoutUser = (req, res) => {
   res.clearCookie("token").json({
@@ -117,7 +211,7 @@ const authMiddleware = async (req, res, next) => {
     });
 
   try {
-    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
+    // console.log('Token:', token);
     req.user = decoded;
     next();
   } catch (error) {
@@ -128,10 +222,10 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-
 module.exports = {
   registerUser,
   loginUser,
+  googleLogin,
   logoutUser,
   authMiddleware,
 };

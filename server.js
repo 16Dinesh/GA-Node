@@ -23,7 +23,7 @@ const adminAuthRouter = require("./routes/auth/adminAuth-routes");
 
 
 //User-API-Route
-const userAuthRouter = require("./routes/auth/userAuth-routes")
+// const userAuthRouter = require("./routes/auth/userAuth-routes")
 
 
 // View
@@ -99,11 +99,10 @@ app.use("/", adminRouter);
 app.use("/", mainPageRoutes);
 
 //API-Admin Services
-app.use("/api/admin ", adminAuthRouter);
+app.use("/api/user", adminAuthRouter);
+
 // app.use("/api/admin/products", adminProductsRouter);
-
 //API-user Services
-app.use("/api/user", userAuthRouter);
-
+``
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`)); 
