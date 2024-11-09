@@ -123,16 +123,16 @@ const googleLogin = async (req, res) => {
 
     if (!user) {
       const userData = {
-          userName: googleData.name,
-          email: googleData.email,
-          googleVerified: true,
-          photoURL: googleData.picture,
-          role: "user",
+        userName: googleData.name,
+        email: googleData.email,
+        googleVerified: true,
+        photoURL: googleData.picture,
+        role: "user",
       };
-  
+
       // Only set `mobile` if provided
       if (googleData.phone_number) userData.mobile = googleData.phone_number;
-  
+
       user = new LoginUser(userData);
       await user.save();
     } else {
@@ -198,47 +198,81 @@ const userRegister = async (req, res) => {
   const { userName, email, password, number } = req.body;
 
   try {
-    let user = await LoginUser.findOneAndUpdate({ email });
-    // if (user)
-    //   return res.json({
-    //     success: false,
-    //     message: "User Already exists with the same email! Please try again",
-    //   });
+    // Check if a user with this email already exists
+    let user = await LoginUser.findOne({ email });
 
-    // if (user) {
-    //   user.userName = userName;
-    //   user.password = password;
-    //   user.number = number;
-    //   user.role = "user";
-    //   await user.save();
-    //   return res.status(200).json({
-    //     success: true,
-    //     message: "User details updated successfully",
-    //   });
-    // } else {
-    //   const newUser = new LoginUser({
-    //     userName,
-    //     email,
-    //     password,  
-    //     number,
-    //     role: "user",
-    //   });
+    if (user) {
+      user.userName = userName;
+      user.password = password;
+      user.mobile = number;
+      user.firebaseSignup = true;
 
-    const newUser = new LoginUser({
-      userName : userName,
-      email: email ,
-      password : password,
-      mobile: number,
-      firebaseSignup: true,
-      role: "user",
-    });
+      await user.save();
 
-    await newUser.save();
+      // Generate a token and send response
+      const token = jwt.sign(
+        {
+          id: user._id,
+          role: user.role,
+          email: user.email,
+          userName: user.userName,
+        },
+        "CLIENT_SECRET_KEY",
+        { expiresIn: "60m" }
+      );
 
-    return res.status(200).json({
-      success: true,
-      message: "User registration successful",
-    });
+      return res
+        .cookie("token", token, { httpOnly: true, secure: false })
+        .status(200)
+        .json({
+          success: true,
+          message: "User information updated successfully",
+          user: {
+            email: user.email,
+            role: user.role,
+            id: user._id,
+            userName: user.userName,
+          },
+        });
+    } else {
+      // If the user does not exist, create a new user
+      const newUser = new LoginUser({
+        userName,
+        email,
+        password,
+        mobile: number,
+        firebaseSignup: true,
+        role: "user",
+      });
+
+      await newUser.save();
+
+      // Generate a token and send response
+      const token = jwt.sign(
+        {
+          id: newUser._id,
+          role: newUser.role,
+          email: newUser.email,
+          userName: newUser.userName,
+        },
+        "CLIENT_SECRET_KEY",
+        { expiresIn: "60m" }
+      );
+
+      return res
+        .cookie("token", token, { httpOnly: true, secure: false })
+        .status(201)
+        .json({
+          success: true,
+          message: "User registration successful",
+          user: {
+            email: newUser.email,
+            role: newUser.role,
+            id: newUser._id,
+            userName: newUser.userName,
+          },
+        });
+    }
   } catch (e) {
     console.error(e);
     res.status(500).json({
@@ -247,6 +281,7 @@ const userRegister = async (req, res) => {
     });
   }
 };
+
 
 //login-user
 const userLogin = async (req, res) => {
@@ -417,6 +452,61 @@ const anonymousFireBase = async (req, res) => {
   }
 };
 
+const phoneNumberFirebase = async (req, res) => {
+  const { number } = req.body;
+
+  try {
+    let user = await LoginUser.findOne({ mobile: number });
+    if (!user) {
+      user = new LoginUser({
+        role: "user",
+        mobile: number,
+        mobileVerified: true,
+      });
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        message: "User registered successfully",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        mobile: user.mobile,
+        mobileVerified: user.mobileVerified,
+      },
+      "CLIENT_SECRET_KEY",
+      { expiresIn: "60m" }
+    );
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+      })
+      .json({
+        success: true,
+        message: "OTP successful",
+        user: {
+          email: user.email,
+          role: user.role,
+          id: user._id,
+          mobile: user.mobile,
+          mobileVerified: user.mobileVerified,
+        },
+      });
+  } catch (e) {
+    console.error("OTP failed:", e);
+    res.status(500).json({
+      success: false,
+      message: "OTP failed",
+    });
+  }
+};
+
 //for now -> admin-logout
 const logoutUser = (req, res) => {
   res.clearCookie("token").json({
@@ -454,6 +544,7 @@ module.exports = {
   anonymousFireBase,
   userLogin,
   userGoogleFireBase,
+  phoneNumberFirebase,
   logoutUser,
   authMiddleware,
 };

@@ -19,6 +19,10 @@ const loginUserSchema = new mongoose.Schema(
     password: {
       type: String,
     },
+    mobileVerified : {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       sparse: true,
