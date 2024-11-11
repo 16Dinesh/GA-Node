@@ -1,99 +1,141 @@
-/* admin-styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
-/* Basic layout styling */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-  }
-  
-  /* Admin layout styling */
-  .admin-layout {
-    display: flex;
-  }
-  
-  /* Sidebar styling */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #495057;
+  scroll-behavior: smooth;
+}
+
+.admin-layout {
+  display: flex;
+}
+
+/* side-Bar */
+.sidebar {
+  width: 250px;
+  background-color: white;
+  color: #495057;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
+.sidebar-brand {
+  text-align: center;
+  font-family: "Nunito Sans" !important;
+  font-size: 2rem;
+  font-weight: 800 !important;
+  padding: 20px 0;
+  color: #5B864D;
+}
+
+.sidebar-MenuItems-Nav  {
+  margin-top: 1rem;
+  flex-direction: column;
+  display: flex;
+  gap: 0.5rem;
+}
+
+a {
+  text-decoration: none;
+  color: black;  
+}
+
+.sideBar-menuItems {
+  display: flex ;
+  cursor: pointer ;
+  font-size: 1.1rem ;
+  line-height: 2.5rem;
+  align-items: center;
+  gap: 1.5rem ;
+  border-radius: 4px;
+  padding-left: 2.5rem ;
+  padding-right: 0.75rem ;
+  padding-top: 0.5rem ;
+  padding-bottom: 0.5rem;
+  color: #374151 ;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-layout-header {
+  flex-grow: 1;
+  margin-left: 250px;
+  background-color: #ffffff;
+  /* padding: 15px; */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.navbar {
+  background-color: #ffffff;
+  border-bottom: px solid #e9ecef;
+  display: flex;
+  padding-top: 20px;
+  /* display: flex; */
+  justify-content: end;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  /* z-index: 10; */
+  /* margin-left: -15px; */
+  height: 40px;
+}
+
+#navbarNav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  margin-right: 10px;
+}
+
+.logout-button {
+  background-color: #42ac46;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logout-button:hover {
+  background-color: #45a049;
+}
+
+.admin-main-content {
+  /* padding: 20px; */
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  color: #495057;
+  height: 500px; /*auto*/
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
   .sidebar {
-    width: 250px;
-    background-color: #343a40;
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-    padding-top: 20px;
+    width: 100%;
+    height: auto;
+    position: relative;
   }
-  .sidebar .nav-link {
-    color: #adb5bd;
-    padding: 10px 15px;
-    display: block;
-    text-decoration: none;
-  }
-  .sidebar .nav-link:hover {
-    background-color: #495057;
-    color: #fff;
-  }
-  .sidebar .nav-item {
-    margin-bottom: 10px;
-  }
-  
-  /* Admin layout header */
   .admin-layout-header {
-    flex-grow: 1;
-    margin-left: 250px; /* Adjust based on sidebar width */
-    background-color: #fff;
-    padding: 15px;
-    height: 100vh;
-    overflow-y: auto;
+    margin-left: 0;
   }
-  
-  /* Navbar styling */
   .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
   }
-  .navbar .navbar-brand {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  .navbar .nav-item .nav-link {
-    color: #333;
-    margin-right: 10px;
-    text-decoration: none;
-  }
-  .navbar .nav-item .nav-link:hover {
-    color: #007bff;
-  }
-  
-  /* Main content styling */
-  .admin-main-content {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%;
-      height: auto;
-      position: relative;
-    }
-    .admin-layout-header {
-      margin-left: 0;
-    }
-    .navbar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-  
+}

@@ -15,8 +15,7 @@
   /* max-width: 700px; */
 }
 
-
-.auth-header{
+.auth-header {
   text-align: center;
   color: #4d7041;
   margin-top: 2rem;
@@ -36,7 +35,7 @@
 .input-field {
   padding: 15px;
   width: 20rem;
-  margin: 10px 0 10px 0 ;
+  margin: 10px 0 10px 0;
   border: 1px solid #ddd;
   border-radius: 8px;
   transition: border-color 0.3s;
@@ -58,7 +57,7 @@
 
 .form-btn-place {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   cursor: pointer;
   margin-left: 0px;
   /* margin: 1.5rem 0rem 1.5rem 0; */
@@ -98,4 +97,23 @@
 
 .link:hover {
   text-decoration: underline;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
 }
