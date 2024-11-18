@@ -1,55 +1,55 @@
 <% layout("/layout/layoutlogin.ejs") -%>
-<div class="common-body">
-  <div class="auth-container">
-    <div class="auth-header">
-      <h3>Login</h3>
-    </div>
-    <div class="auth-body">
-      <form action="/" method="POST" class="auth-form" novalidate>
-        <div class="form-group">
-          <label for="username" class="input-label">User ID</label>
-          <input
-            type="text"
-            class="input-field"
-            id="username"
-            name="username"
-            placeholder="Enter your User ID"
-            required
-          />
-        </div>
+<div className="auth-register-container">
+  <div className="auth-register-header">
+    <h1>Admin Dashboard Login</h1>
+  </div>
+  <div>
+    <form action="/" method="post" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">User ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          placeholder="Enter your User ID"
+          required
+        />
+      </div>
 
-        <div class="form-group">
-          <label for="password" class="input-label">Password</label>
-          <input
-            type="password"
-            class="input-field"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-          />
-        </div>
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
 
-        <div class="form-group">
-          <label for="adminKey" class="input-label">*Admin Key</label>
-          <input
-            type="password"
-            class="input-field"
-            id="adminKey"
-            name="adminKey"
-            placeholder="Enter Admin Key"
-            required
-          />
-        </div>
+      <div class="mb-3">
+        <label for="adminKey" class="form-label fw-semibold">*Admin Key</label>
+        <input
+          type="password"
+          class="form-control"
+          id="adminKey"
+          name="adminKey"
+          placeholder="Enter Admin Key"
+          required
+        />
+        <div class="valid-feedback">
+          Looks Good
+      </div>
+      </div>
 
-        <div class="form-btn-place">
-          <button type="submit" class="submit-btn">Login</button>
-        </div>
-
-        <!-- <div class="register-text">
-            Don’t have an account? <a href="/register" class="link">Register now</a>
-          </div> -->
-      </form>
-    </div>
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="auth-btn ">
+          Login
+        </button>
+      </div>
+    </form>
   </div>
 </div>
+

@@ -28,13 +28,12 @@ router
         req.logIn(user, (err) => {
           if (err) {
             console.log("Error during login:", err);
-            return res.redirect("/"); // Redirect on login error
+            return res.redirect("/"); 
           }
-          console.log('Welcome back, Admin!'); // Log success message
-          return res.redirect("/dashboard"); // Redirect on success
+          console.log('Welcome back, Admin!'); 
+          return res.redirect("/dashboard"); 
         });
-      })(req, res, next); // Call the passport authenticate function
-    }
+      })(req, res, next);     }
   );
 
 // Admin signup

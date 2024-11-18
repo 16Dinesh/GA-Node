@@ -5,12 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GA-Server</title>
     <link rel="stylesheet" href="/css/Login.css" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
 
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid vh-100 d-flex p-0 auth-layout">
+      <div
+        class="d-none d-lg-flex col-lg-6 auth-layout-sidebar justify-content-center align-items-center"
+      >
+        <div class="text-center text-light auth-layout-content">
+          <h1 class="display-4 fw-bold">Admin Panel</h1>
+        </div>
+      </div>
+
+      <div
+        class="col-lg-6 d-flex align-items-center justify-content-center auth-layout-main"
+      >
         <%- body %>
+      </div>
     </div>
   </body>
-  <script src="/js/app.js"></script>
+  <script src="/js/loginScript.js"></script>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </html>

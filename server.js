@@ -1,6 +1,6 @@
 require("dotenv").config({ path: "./.env" });
 const express = require("express");
-const flash = require('connect-flash');
+const flash = require("connect-flash");
 const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -11,12 +11,13 @@ const ejsMate = require("ejs-mate");
 const path = require("path");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const helmet = require('helmet');
+const SuperUser = require("./models/page/SuperUser");
+const helmet = require("helmet");
+const ExpressError = require("./utils/ExpressError.js");
 
 // Server-Routes
 const adminRouter = require("./routes/page/admin/index");
 const mainPageRoutes = require("./routes/page/items/Index");
-const SuperUser = require("./models/page/SuperUser");
 
 // Admin-API-Routes
 const adminAuthRouter = require("./routes/auth/adminAuth-routes");
@@ -26,6 +27,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.engine("ejs", ejsMate);
+app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(flash());
 
@@ -59,7 +61,7 @@ const sessionOptions = {
     expires: Date.now() + 1000 * 60 * 60, // 1 hour
     maxAge: 1000 * 60 * 60, // 1 hour
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // set to true in production
+    secure: process.env.NODE_ENV === "production", // set to true in production
   },
 };
 
@@ -94,23 +96,30 @@ passport.deserializeUser(SuperUser.deserializeUser());
 
 // Flash messages
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  res.locals.done = req.flash("done");
+  res.locals.error = req.flash("error");
+  // res.locals.localuser = req.user || null;
   next();
 });
 
 // Routes
 app.use("/", adminRouter);
 app.use("/", mainPageRoutes);
+
+//api routes
 app.use("/api/user", adminAuthRouter);
+
+app.all("*", (req, res, next) => {
+  next(new ExpressError(404, "Page not Found?"));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
+  let { statusCode = 500, message = "SomeThing Went Wrong!" } = err;
+  res.status(statusCode).render("error/index", { err });
+  // res.status(statusCode).send(message);
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
